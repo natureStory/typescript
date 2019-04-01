@@ -1,11 +1,14 @@
+const path = require('path');
 var webpack = require('webpack');
+// 在 “/src/index.template.html” 实现自动引入
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: 'development',
     entry: "./src/index.tsx",
     output: {
-        publicPath:'/dist', // 必须加publicPath
+        publicPath:'/', // 必须加publicPath
         chunkFilename: "static/js/[name].chunk.js",
-        filename: "bundle.js",
+        filename: 'app/[name]_[hash:8].js',
         path: __dirname + "/dist"
     },
 
@@ -31,12 +34,18 @@ module.exports = {
     // assume a corresponding global variable exists and use that instead.
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
-    externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
-    },
+
+    // 配置如下参数内容，需要在index.html手动引入react和react-dom，在webpack忽略打包
+    // externals: {
+    //     "react": "React",
+    //     "react-dom": "ReactDOM"
+    // },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),  // 热更新插件
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, './index.template.html'),
+            inject: true
+        })
     ],
     optimization: {
         splitChunks: {
@@ -50,7 +59,7 @@ module.exports = {
         }
     },
     devServer: {
-        contentBase: "./",//本地服务器所加载的页面所在的目录
+        contentBase: "./dist",//本地服务器所加载的页面所在的目录
         historyApiFallback: true,//不跳转
         host: 'localhost',
         port: 3000,
