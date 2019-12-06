@@ -1,5 +1,7 @@
 import * as React from "react";
-import { RouteComponentProps, Link } from 'react-router-dom';
+import {RouteComponentProps, Link} from 'react-router-dom';
+
+import Layout from '../../pages/layout';
 
 export default class Hello extends React.Component<RouteComponentProps, null> {
     render() {
